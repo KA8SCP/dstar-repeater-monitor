@@ -652,6 +652,75 @@ function parse_dplus_gateway(array $r, string $html, int $ms, string $url): arra
     }
 
     /*
+     * Parse DPLUS Remote Users tables.
+     *
+     * Form:
+     * Callsign | User Message | Last TX on | Type
+     */
+    foreach ($tables as $t) {
+        if (!$t) continue;
+
+        $headerRow = -1;
+        $map = [];
+
+        foreach (array_slice($t, 0, 4, true) as $ri => $row) {
+            $lower = array_map(
+                fn($v) => strtolower(trim($v)),
+                $row
+            );
+
+            if (
+                in_array("callsign", $lower, true) &&
+                in_array("last tx on", $lower, true) &&
+                in_array("type", $lower, true) &&
+                !in_array("time", $lower, true) &&
+                !in_array("date-time", $lower, true)
+            ) {
+                $headerRow = $ri;
+
+                foreach ($lower as $i => $name) {
+                    $map[$name] = $i;
+                }
+
+                break;
+            }
+        }
+
+        if ($headerRow < 0) continue;
+
+        foreach (
+            array_slice($t, $headerRow + 1, MAX_USERS)
+            as $row
+        ) {
+            $call = trim($row[$map["callsign"]] ?? "");
+
+            if (preg_match(
+                "/^([A-Z0-9][A-Z0-9\\/-]{2,15})/i",
+                $call,
+                $cm
+            )) {
+                $call = strtoupper($cm[1]);
+            } else {
+                continue;
+            }
+
+            $lastTx = trim($row[$map["last tx on"]] ?? "");
+
+            $s["users"][] = [
+                "callsign" => $call,
+                "message" => isset($map["user message"])
+                    ? trim($row[$map["user message"]] ?? "")
+                    : "",
+                "module" => preg_match("/^[A-E]$/i", $lastTx)
+                    ? strtoupper($lastTx)
+                    : "",
+                "last_tx_status" => $lastTx,
+                "type" => trim($row[$map["type"]] ?? "")
+            ];
+        }
+    }
+
+    /*
      * Parse Last Heard tables.
      *
      * DPLUS form:

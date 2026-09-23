@@ -141,7 +141,18 @@ function card(r){
   m=>String(m.linked_to||'').toLowerCase()!=='unlinked'
  ).length;
 
- const heardCount=(r.dplus_last_heard||[]).length;
+ const remoteUsers=(r.users||[]);
+
+ const remoteUsersHtml=remoteUsers.length
+  ? remoteUsers.slice(0,50).map(u=>
+      `<tr>
+       <td class="call">${esc(u.callsign||"")}</td>
+       <td>${esc(u.message||"")}</td>
+       <td>${esc(u.module||u.last_tx_status||"")}</td>
+       <td>${esc(u.type||"")}</td>
+       </tr>`
+    ).join("")
+  : `<tr><td colspan="4" class="muted">No Remote Users connected.</td></tr>`;
 
  let g2Section='';
 
@@ -222,8 +233,8 @@ function card(r){
     <span>Active Links</span>
    </div>
    <div class="metric">
-    <b>${heardCount}</b>
-    <span>Last Heard</span>
+    <b>${remoteUsers.length}</b>
+    <span>Remote Users</span>
    </div>
    <div class="metric">
     <b>${r.response_ms??'—'}${r.response_ms!==null&&r.response_ms!==undefined?' ms':''}</b>
@@ -239,6 +250,18 @@ function card(r){
   <section>
    <h3>DPLUS Modules / Links</h3>
    <div class="modules">${dplusModules}</div>
+  </section>
+
+  <section>
+   <h3>DPLUS Remote Users</h3>
+   <div class="table">
+    <table>
+     <thead>
+      <tr><th>Callsign</th><th>User Message</th><th>Module</th><th>Type</th></tr>
+     </thead>
+     <tbody>${remoteUsersHtml}</tbody>
+    </table>
+   </div>
   </section>
 
   <section>
