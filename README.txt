@@ -1,16 +1,16 @@
 # D-STAR Repeater Network Monitor
 
-**Version 1.0.0 — September 2026**
+**Version 1.0.1 — September 2026**
 
 Web-based monitoring system for D-STAR DPLUS repeater gateways.
 
-The monitor retrieves publicly available gateway dashboard information and displays repeater status, DPLUS module/link state, Last Heard activity, response time, and network-wide activity.
+The monitor retrieves publicly available gateway dashboard information and displays repeater status, DPLUS module/link state, Remote Users, Last Heard activity, response time, and network-wide activity.
 
 This is a separate project from the D-STAR Reflector Monitor.
 
 ## Monitored Repeaters
 
-Version 1.0.0 monitors:
+Version 1.0.1 monitors:
 
 | Repeater | Dashboard |
 |---|---|
@@ -32,6 +32,8 @@ For each repeater the monitor can display:
 - DPLUS software version
 - DPLUS modules A-E
 - Current reflector/link state for each module
+- DPLUS Remote Users
+- Remote User callsign, User Message, Last TX module/status, and connection type
 - DPLUS Last Heard activity
 - User Message when published
 - Direct link to the source dashboard
@@ -39,6 +41,23 @@ For each repeater the monitor can display:
 Modules are displayed alphabetically.
 
 Blank Last Heard callsigns are intentionally excluded. The monitor does not manufacture callsigns, link states, or activity that the source gateway does not publish.
+
+## DPLUS Remote Users
+
+Version 1.0.1 adds monitoring of Remote Users published by DPLUS gateway dashboards.
+
+For each connected Remote User, the monitor can display:
+
+- Callsign
+- User Message
+- Last TX module or status
+- Connection type, such as HotSpot
+
+The repeater card also displays the current Remote Users count.
+
+When Last TX on contains a D-STAR module letter A-E, the module is displayed. Non-module states published by the gateway, such as `listening`, are preserved rather than converted into a module.
+
+Only Remote Users actually published by the source gateway are displayed.
 
 ## Network Last Heard
 
@@ -58,7 +77,7 @@ If a gateway publishes no valid Last Heard callsign, no activity is generated fo
 
 WB1GOF publishes both DPLUS and g2_link information on the same dashboard.
 
-Version 1.0.0 keeps these two sources separate.
+Version 1.0.1 keeps these two sources separate.
 
 The WB1GOF card can display:
 
@@ -141,7 +160,7 @@ The web interface should return HTTP 200.
 
 **D-STAR Repeater Network Monitor**
 
-Version **v1.0.0** — September 2026
+Version **v1.0.1** — September 2026
 
 Repository name:
 
