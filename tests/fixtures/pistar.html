@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" lang="en">
+<head>
+    <meta name="robots" content="index" />
+    <meta name="robots" content="follow" />
+    <meta name="language" content="English" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="index 20260220" />
+    <meta name="Author" content="Hans-J. Barthen (DL5DI), Kim Huebel (DG9VH) and Andy Taylor (MW0MWZ)" />
+    <meta name="Description" content="Pi-Star Dashboard" />
+    <meta name="KeyWords" content="MW0MWZ,MMDVMHost,ircDDBGateway,D-Star,ircDDB,Pi-Star,Blackwood,Wales,DL5DI,DG9VH" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="css/nice-select.min.css?ver=4.1.8" />
+    <title>W1ATD - Digital Voice Dashboard</title>
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 830px)" href="css/pistar-css.php?version=0.95" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 829px)" href="css/pistar-css-mini.php?version=0.95" />
+    <script type="text/javascript" src="/jquery.min.js"></script>
+    <script type="text/javascript" src="/functions.js"></script>
+    <script type="text/javascript">
+      $.ajaxSetup({ cache: false });
+    </script>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div style="font-size: 8px; text-align: left; padding-left: 8px; float: left;">Hostname: pi-star</div><div style="font-size: 8px; text-align: right; padding-right: 8px;">Pi-Star:4.1.8 / Dashboard: 20260220</div>
+<h1>Pi-Star Digital Voice Dashboard for W1ATD</h1>
+<p style="padding-right: 5px; text-align: right; color: #ffffff;">
+ <a href="/" style="color: #ffffff;">Dashboard</a> |
+ <a href="/admin/" style="color: #ffffff;">Admin</a> |
+ <a href="/admin/configure.php" style="color: #ffffff;">Configuration</a>
+</p>
+</div>
+
+<div class="nav">
+<script type="text/javascript">
+function reloadRepeaterInfo(){
+  $("#repeaterInfo").load("/mmdvmhost/repeaterinfo.php",function(){ setTimeout(reloadRepeaterInfo,1000) });
+}
+setTimeout(reloadRepeaterInfo,1000);
+$(window).trigger('resize');
+</script>
+<div id="repeaterInfo">
+
+<table>
+  <tr><th colspan="2">Modes Enabled</th></tr>
+  <tr><td style="background:#0b0; color:#030; width:50%;">D-Star</td>
+<td style="background:#0b0; color:#030; width:50%;">DMR</td>
+</tr>
+  <tr><td style="background:#0b0; color:#030; width:50%;">M17</td>
+<td style="background:#0b0; color:#030; width:50%;">NXDN</td>
+</tr>
+  <tr><td style="background:#0b0; color:#030; width:50%;">P25</td>
+<td style="background:#0b0; color:#030; width:50%;">YSF</td>
+</tr>
+  <tr><td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">DMR XMode</td>
+<td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">YSF XMode</td>
+</tr>
+  <tr><td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">FM</td>
+<td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">POCSAG</td>
+</tr>
+</table>
+<br />
+
+<table>
+  <tr><th colspan="2">Network Status</th></tr>
+  <tr><td style="background:#0b0; color:#030; width:50%;">D-Star Net</td>
+<td style="background:#0b0; color:#030; width:50%;">DMR Net</td>
+</tr>
+  <tr><td style="background:#0b0; color:#030; width:50%;">M17 Net</td>
+<td style="background:#0b0; color:#030; width:50%;">NXDN Net</td>
+</tr>
+  <tr><td style="background:#0b0; color:#030; width:50%;">P25 Net</td>
+<td style="background:#0b0; color:#030; width:50%;">YSF Net</td>
+</tr>
+  <tr><td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">DMR2NXDN</td>
+<td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">DMR2YSF</td>
+</tr>
+  <tr><td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">YSF2DMR</td>
+<td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">YSF2NXDN</td>
+</tr>
+  <tr><td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">YSF2P25</td>
+<td style="background:#606060; color:#b0b0b0;" aria-disabled="true>">POCSAG Net</td>
+</tr>
+</table>
+<br />
+
+<table>
+<tr><th colspan="2">Radio Info</th></tr>
+<tr><th>Trx</th><td style="background:#0b0; color:#030;">Listening</td></tr>
+<tr><th>Tx</th><td style="background: #ffffff;">145.390000 MHz</td></tr>
+<tr><th>Rx</th><td style="background: #ffffff;">144.790000 MHz</td></tr>
+<tr><th>FW</th><td style="background: #ffffff;">MMDVM:RB_STM32</td></tr>
+<tr><th>TCXO</th><td style="background: #ffffff;">12.0000  MHz</td></tr>
+</table>
+
+<br />
+<table>
+<tr><th colspan="2">D-Star Repeater</th></tr>
+<tr><th>RPT1</th><td style="background: #ffffff;">W1ATD&nbsp;&nbsp;C</td></tr>
+<tr><th>RPT2</th><td style="background: #ffffff;">W1ATD&nbsp;&nbsp;G</td></tr>
+<tr><th colspan="2">D-Star Network</th></tr>
+<tr><th>APRS</th><td style="background: #ffffff;">noam.aprs2.net</td></tr>
+<tr><th>IRC</th><td style="background: #ffffff;">ircv4.openquad.n</td></tr>
+<tr><td colspan="2" style="background: #ffffff;">Not Linked</td></tr>
+</table>
+<br />
+<table>
+<tr><th colspan="2">DMR Repeater</th></tr>
+<tr><th>DMR ID</th><td style="background: #ffffff;">312541</td></tr>
+<tr><th>DMR CC</th><td style="background: #ffffff;">9</td></tr>
+<tr><th>TS1</th><td style="background:#0b0;">enabled</td></tr>
+<tr><th>TS2</th><td style="background:#0b0;">enabled</td></tr>
+<tr><th colspan="2">DMR Master</th></tr>
+<tr><td  style="background: #ffffff;" colspan="2">BM 3104 United St..</td></tr>
+</table>
+<br />
+<table>
+<tr><th colspan="2">YSF Network</th></tr>
+<tr><td colspan="2"style="background: #ffffff;">Not Linked</td></tr>
+</table>
+<br />
+<table>
+<tr><th colspan="2">P25 Radio</th></tr>
+<tr><th style="width:70px">NAC</th><td>293</td></tr>
+<tr><th colspan="2">P25 Network</th></tr>
+<tr><td colspan="2"style="background: #ffffff;">Not Linked</td></tr>
+</table>
+<br />
+<table>
+<tr><th colspan="2">NXDN Radio</th></tr>
+<tr><th style="width:70px">RAN</th><td>1</td></tr>
+<tr><th colspan="2">NXDN Network</th></tr>
+<tr><td colspan="2"style="background: #ffffff;">TG 25000</td></tr>
+</table>
+<br />
+<table>
+<tr><th colspan="2">M17 Radio</th></tr>
+<tr><th style="width:70px">CAN</th><td>0</td></tr>
+<tr><th colspan="2">M17 Network</th></tr>
+<tr><td colspan="2"style="background: #ffffff;">Not Linked</td></tr>
+</table>
+
+</div>
+</div>
+<div class="content">
+<script type="text/javascript">
+function reloadcssConnections(){
+  $("#cssConnects").load("/dstarrepeater/css_connections.php",function(){ setTimeout(reloadcssConnections,15000) });
+}
+setTimeout(reloadcssConnections,15000);
+$(window).trigger('resize');
+</script>
+<div id="cssConnects">
+</div>
+<script type="text/javascript">
+function reloadLocalTx(){
+  $("#localTxs").load("/mmdvmhost/localtx.php",function(){ setTimeout(reloadLocalTx,1500) });
+}
+setTimeout(reloadLocalTx,1500);
+function reloadLastHerd(){
+  $("#lastHerd").load("/mmdvmhost/lh.php",function(){ setTimeout(reloadLastHerd,1500) });
+}
+setTimeout(reloadLastHerd,1500);
+$(window).trigger('resize');
+</script>
+<div id="lastHerd">
+<b>Gateway Activity</b>
+  <table>
+    <tr>
+      <th><a class="tooltip" href="#">Time (EDT)<span><b>Time in EDT time zone</b></span></a></th>
+      <th><a class="tooltip" href="#">Mode<span><b>Transmitted Mode</b></span></a></th>
+      <th style="min-width:14ch"><a class="tooltip" href="#">Callsign<span><b>Callsign</b></span></a></th>
+      <th><a class="tooltip" href="#">Target<span><b>Target, D-Star Reflector, DMR Talk Group etc</b></span></a></th>
+      <th><a class="tooltip" href="#">Src<span><b>Received from source</b></span></a></th>
+      <th><a class="tooltip" href="#">Dur(s)<span><b>Duration in Seconds</b></span></a></th>
+      <th><a class="tooltip" href="#">Loss<span><b>Packet Loss</b></span></a></th>
+      <th><a class="tooltip" href="#">BER<span><b>Bit Error Rate</b></span></a></th>
+    </tr>
+<tr><td align="left">14:24:43 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W1ATD" target="_blank">W1ATD</a>/INFO</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W1ATD*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>2.6</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">14:24:38 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=KB1ZSW" target="_blank">KB1ZSW</a>/4100</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=KB1ZSW*" target="_blank">GPS</a>&#41;</div></td><td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U</td><td style="background:#1d1;">RF</td><td>1.0</td><td>0%</td><td style="background:#1d1;">0.3%</td></tr>
+<tr><td align="left">14:20:21 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=N8NOE" target="_blank">N8NOE</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=N8NOE*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>3.4</td><td style="background:#1d1;">1%</td><td>0.0%</td></tr>
+<tr><td align="left">14:20:13 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=K2MPR" target="_blank">K2MPR</a>/NJ  </div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=K2MPR*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>5.5</td><td style="background:#f33;">10%</td><td>0.0%</td></tr>
+<tr><td align="left">14:19:53 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W9WXV" target="_blank">W9WXV</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W9WXV*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>10.1</td><td style="background:#fa0;">2%</td><td>0.0%</td></tr>
+<tr><td align="left">14:18:55 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=KF8UU" target="_blank">KF8UU</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=KF8UU*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>12.0</td><td>0%</td><td style="background:#f33;">9.6%</td></tr>
+<tr><td align="left">14:17:38 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W8XDB" target="_blank">W8XDB</a>/IC91</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W8XDB*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>0.3</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">14:16:39 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=KF3EC" target="_blank">KF3EC</a>/DVAP</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=KF3EC*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ   via REF030 C</td><td>Net</td><td>1.3</td><td style="background:#f33;">87%</td><td>0.0%</td></tr>
+<tr><td align="left">14:14:03 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=M0OKL" target="_blank">M0OKL</a>/9700</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=M0OKL*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>0.9</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">11:06:45 Sep 26th</td><td align="left">DMR TS2</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=G6VBJ" target="_blank">G6VBJ</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=G6VBJ*" target="_blank">GPS</a>&#41;</div></td><td align="left">TG&nbsp;3125</td><td>Net</td><td>4.2</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:47:51 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=WB3JSW" target="_blank">WB3JSW</a>/AMBE</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=WB3JSW*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>5.4</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:46:36 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=MM3TWA" target="_blank">MM3TWA</a>/AMBE</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=MM3TWA*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>11.3</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:41:40 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=N7XHI" target="_blank">N7XHI</a>/AJS </div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=N7XHI*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>1.2</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:36:32 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=KJ5MWY" target="_blank">KJ5MWY</a>/D75 </div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=KJ5MWY*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>0.5</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:33:07 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W8SV" target="_blank">W8SV</a>/5100</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W8SV*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>0.7</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:28:33 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=VO1WAR" target="_blank">VO1WAR</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=VO1WAR*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>24.6</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">08:28:08 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=K4CPJ" target="_blank">K4CPJ</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=K4CPJ*" target="_blank">GPS</a>&#41;</div></td><td align="left">CQCQCQ  </td><td>Net</td><td>1.8</td><td>0%</td><td style="background:#1d1;">0.1%</td></tr>
+<tr><td align="left">01:29:08 Sep 26th</td><td align="left">DMR TS2</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W6USC" target="_blank">W6USC</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W6USC*" target="_blank">GPS</a>&#41;</div></td><td align="left">TG&nbsp;3125</td><td>Net</td><td>1.6</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">23:15:08 Sep 25th</td><td align="left">DMR TS2</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W1EAV" target="_blank">W1EAV</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W1EAV*" target="_blank">GPS</a>&#41;</div></td><td align="left">TG&nbsp;9</td><td style="background:#1d1;">RF</td><td>9.4</td><td>0%</td><td>0.0%</td></tr>
+<tr><td align="left">23:14:11 Sep 25th</td><td align="left">DMR TS1</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=KK7UQB" target="_blank">KK7UQB</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=KK7UQB*" target="_blank">GPS</a>&#41;</div></td><td align="left">TG&nbsp;3100</td><td>Net</td><td>30.7</td><td>0%</td><td>0.0%</td></tr>
+  </table>
+
+
+</div>
+<br />
+<div id="localTxs">
+<b>Local RF Activity</b>
+  <table>
+    <tr>
+      <th><a class="tooltip" href="#">Time (EDT)<span><b>Time in EDT time zone</b></span></a></th>
+      <th><a class="tooltip" href="#">Mode<span><b>Transmitted Mode</b></span></a></th>
+      <th style="min-width:14ch"><a class="tooltip" href="#">Callsign<span><b>Callsign</b></span></a></th>
+      <th><a class="tooltip" href="#">Target<span><b>Target, D-Star Reflector, DMR Talk Group etc</b></span></a></th>
+      <th><a class="tooltip" href="#">Src<span><b>Received from source</b></span></a></th>
+      <th><a class="tooltip" href="#">Dur(s)<span><b>Duration in Seconds</b></span></a></th>
+      <th style="min-width:5ch"><a class="tooltip" href="#">BER<span><b>Bit Error Rate</b></span></a></th>
+      <th style="min-width:8ch"><a class="tooltip" href="#">RSSI<span><b>Received Signal Strength Indication</b></span></a></th>
+    </tr>
+<tr><td align="left">14:24:38 Sep 26th</td><td align="left">D-Star</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=KB1ZSW" target="_blank">KB1ZSW</a>/4100</div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=KB1ZSW*" target="_blank">GPS</a>&#41;</div></td><td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U</td><td style="background:#1d1;">RF</td><td>1.0</td><td style="background:#1d1;">0.3%</td><td>S1 (-141 dBm)</td></tr>
+<tr><td align="left">23:15:08 Sep 25th</td><td align="left">DMR TS2</td><td align="left"><div style="float:left;"><a href="https://database.radioid.net/database/view?callsign=W1EAV" target="_blank">W1EAV</a></div> <div style="text-align:right;">&#40;<a href="https://aprs.fi/#!call=W1EAV*" target="_blank">GPS</a>&#41;</div></td><td align="left">TG&nbsp;9</td><td style="background:#1d1;">RF</td><td>9.4</td><td>0.0%</td><td>S1 (-141 dBm)</td></tr>
+  </table>
+
+</div>
+</div>
+
+<div class="footer">
+Pi-Star / Pi-Star Dashboard, &copy; Andy Taylor (MW0MWZ) 2014-2026.<br />
+ircDDBGateway Dashboard by Hans-J. Barthen (DL5DI),<br />
+MMDVMDash developed by Kim Huebel (DG9VH), <br />
+Need help? Click <a style="color: #ffffff;" href="https://www.facebook.com/groups/pistarusergroup/" target="_new">here for the Facebook Group</a><br />
+or Click <a style="color: #ffffff;" href="https://forum.pistar.uk/" target="_new">here to join the Support Forum</a><br />
+Get your copy of Pi-Star from <a style="color: #ffffff;" href="http://www.pistar.uk/downloads/" target="_new">here</a>.<br />
+</div>
+
+</div>
+</body>
+<script type="text/javascript" src="/nice-select.min.js"></script>
+<script type="text/javascript">
+    var selectize = document.querySelectorAll('select')
+    var options = {searchable: true};
+    selectize.forEach(function(select){
+        if( select.length > 30 && null === select.onchange ) {
+            select.classList.add("small", "selectize");
+            tabletd = select.closest('td');
+            tabletd.style.cssText = 'overflow-x:unset';
+            NiceSelect.bind(select, options);
+        }
+    });
+</script>
+</html>

@@ -2,11 +2,12 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/digital_repeaters.php';
 
 function blank_status(array $r): array {
     return [
         'name' => $r['name'], 'type' => $r['type'], 'host' => $r['host'],
-        'url' => $r['urls'][0], 'online' => false, 'http_code' => 0,
+        'url' => $r['dashboard_url'] ?? $r['urls'][0], 'online' => false, 'http_code' => 0,
         'response_ms' => null, 'checked_at' => gmdate('c'),
         'uptime' => null, 'version' => null, 'drefd_version' => null,
         'xlx_version' => null, 'dashboard_version' => null, 'dcs_version' => null, 'description' => null,
@@ -29,7 +30,9 @@ function fetch_url(string $url, bool $insecureSsl = false): array {
         CURLOPT_MAXREDIRS => 4,
         CURLOPT_CONNECTTIMEOUT => 4,
         CURLOPT_TIMEOUT => HTTP_TIMEOUT,
-        CURLOPT_USERAGENT => 'DSTAR-Repeater-Monitor/1.0',
+        CURLOPT_USERAGENT => parse_url($url, PHP_URL_HOST) === 'api.brandmeister.network'
+            ? 'Mozilla/5.0'
+            : 'DSTAR-Repeater-Monitor/1.0',
         CURLOPT_ENCODING => '',
         CURLOPT_SSL_VERIFYPEER => !$insecureSsl,
         CURLOPT_SSL_VERIFYHOST => $insecureSsl ? 0 : 2,
@@ -1159,7 +1162,22 @@ function get_reflector(array $r): array {
     }
 
     $type = strtoupper($r['type']);
-    if ($type === 'XLXD') {
+    if ($type === 'BRANDMEISTER') {
+        $s = parse_brandmeister($r, $raw['body'], $raw['response_ms']);
+        if ($s['error'] === null) add_brandmeister_heard($s, (int)$r['device_id']);
+        if ($s['error'] === null && !empty($r['profile_url'])) {
+            $profile = fetch_any([$r['profile_url']]);
+            if ($profile['ok']) {
+                add_brandmeister_profile($s, $profile['body']);
+            } else {
+                $s['profile_error'] = 'Talkgroup data unavailable';
+            }
+        }
+    }
+    elseif ($type === 'PISTAR') {
+        $s = parse_pistar($r, $raw['body'], $raw['response_ms'], $raw['url']);
+    }
+    elseif ($type === 'XLXD') {
         $s = parse_xlxd($r,$raw['body'],$raw['response_ms'],$raw['url']);
 
         // Fetch the XLXD dashboard's authoritative Modules List.
@@ -1334,6 +1352,7 @@ function get_reflector(array $r): array {
         $s = parse_dplus($r,$raw['body'],$raw['response_ms'],$raw['url']);
     }
 
+    $s['http_code'] = $raw['http_code'];
     $s['checked_at'] = gmdate('c');
     $s['cached'] = false;
     save_cache($r['name'],$s);

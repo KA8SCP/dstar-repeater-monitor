@@ -20,7 +20,7 @@ $initial = [
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>D-STAR Repeater Network Monitor</title>
+<title>Digital Repeater Monitor</title>
 <style>
 :root{color-scheme:dark;--bg:#08111f;--panel:#101c2e;--panel2:#16243a;--line:#2b3a52;--text:#e8eef7;--muted:#94a3b8;--green:#22c55e;--red:#ef4444;--blue:#60a5fa;--amber:#f59e0b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
@@ -37,32 +37,32 @@ section{padding:0 12px 12px}h3{font-size:13px;margin:5px 0 8px;color:#cbd5e1;bor
 </style>
 </head>
 <body>
-<header><div class="wrap"><div class="title">📡 D-STAR Repeater Network Monitor</div><div class="sub">DPLUS Gateways — WB1GOF · K1HRO · W1MRA · K1MRA · KA1EAR · W1SCV · KS1R · KD8QOF</div></div></header>
+<header><div class="wrap"><div class="title">📡 Digital Repeater Monitor</div><div class="sub">D-STAR gateways · WB1GOF DMR 312543 · W1ATD Multimode</div></div></header>
 <main class="wrap">
 <div id="alertbar" class="alertbar"></div>
 <div class="stats" id="stats"></div>
 <div class="toolbar">
 <input id="filter" placeholder="Filter callsign, repeater or host…">
-<select id="type"><option value="">All types</option><option value="DPLUS_GATEWAY">DPLUS Gateway</option></select>
+<select id="type"><option value="">All types</option><option value="DPLUS_GATEWAY">DPLUS Gateway</option><option value="BRANDMEISTER">DMR / BrandMeister</option><option value="PISTAR">Multimode / Pi-Star</option></select>
 <div class="updated" id="updated">Loading…</div>
 </div>
 <div class="network panel" style="padding:14px">
 <h2>Network-wide Last Heard</h2>
-<div class="table"><table><thead><tr><th>Repeater</th><th>Callsign</th><th>User Message</th><th>Module</th><th>Time</th></tr></thead><tbody id="lastheard"></tbody></table></div>
+<div class="table"><table><thead><tr><th>Repeater</th><th>Callsign</th><th>User Message</th><th>Module / Mode</th><th>Target</th><th>Time</th></tr></thead><tbody id="lastheard"></tbody></table></div>
 </div>
 <div class="network panel" style="padding:14px"><h2>24-hour Availability History</h2><div id="history" class="historygrid"><span class="muted">Loading history…</span></div></div>
 <div class="grid" id="cards"></div>
-<div class="footer">Auto-refresh every <?=REFRESH_SECONDS?> seconds · Data is read from public D-STAR repeater dashboards.</div>
+<div class="footer">Auto-refresh every <?=REFRESH_SECONDS?> seconds · Public repeater dashboards and BrandMeister API. Pi-Star availability measures dashboard reachability.</div>
 </main>
 <script>
-const initial = <?=json_encode($initial,JSON_UNESCAPED_SLASHES)?>;
+const initial = <?=json_encode($initial,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_SLASHES)?>;
 const REFRESH_MS = <?=REFRESH_SECONDS*1000?>;
 let data = initial;
 let previous = null;
 let lastSuccess = Date.now();
 let recentActivity = new Set();
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function heardKey(x){return [x.reflector,x.callsign,x.module,x.time].join('|');}
+function heardKey(x){return [x.reflector,x.callsign,x.module,x.mode,x.target,x.time||x.last_heard].join('|');}
 function detectChanges(oldData,newData){
  recentActivity=new Set(); if(!oldData) return;
  const oldMap=Object.fromEntries(oldData.reflectors.map(r=>[r.name,r]));
@@ -90,11 +90,11 @@ function render(){
   const repeater=x.reflector||'—';
   const callsign=x.callsign||'—';
   const message=x.message||x.user||'—';
-  const module=x.last_tx_status||x.module||'—';
+  const module=x.mode||x.last_tx_status||x.module||'—';
   const heard=x.time||x.last_heard||'—';
 
-  return `<tr><td>${esc(repeater)}</td><td class="call">${esc(callsign)}</td><td>${esc(message)}</td><td>${esc(module)}</td><td>${esc(heard)}</td></tr>`;
- }).join('')||'<tr><td colspan="5" class="muted">No Last Heard data published.</td></tr>';
+  return `<tr><td>${esc(repeater)}</td><td class="call">${esc(callsign)}</td><td>${esc(message)}</td><td>${esc(module)}</td><td>${esc(x.target||'—')}</td><td>${esc(heard)}</td></tr>`;
+ }).join('')||'<tr><td colspan="6" class="muted">No Last Heard data published.</td></tr>';
 }
 function serviceFields(r){
  const item=(label,value)=>`<div class="serviceitem"><span class="label">${esc(label)}</span><span class="value">${esc(value||'Not published')}</span></div>`;
@@ -114,6 +114,7 @@ function serviceFields(r){
  return state+uptime+item('Software',r.version);
 }
 function card(r){
+ if(r.type==='BRANDMEISTER'||r.type==='PISTAR') return digitalCard(r);
  const dplusMods=[...(r.dplus_modules||r.modules||[])].sort(
   (a,b)=>String(a.module||'').localeCompare(String(b.module||''))
  );
@@ -280,6 +281,37 @@ function card(r){
 
   <a class="button" href="${esc(r.url)}" target="_blank" rel="noopener">Open Dashboard ↗</a>
  </article>`;
+}
+
+function digitalCard(r){
+ const bm=r.type==='BRANDMEISTER';
+ const item=(label,value)=>`<div class="serviceitem"><span class="label">${esc(label)}</span><span class="value">${esc(value??'Not published')}</span></div>`;
+ const radio=Object.entries(r.radio||{}).map(([k,v])=>item(k,v)).join('');
+ const fields=item('Software',r.version)+item('Response',r.response_ms==null?null:r.response_ms+' ms')+
+  (bm?item('DMR ID',r.device_id)+item('Last seen (UTC)',r.last_seen):item('Dashboard',r.dashboard_version));
+ let details='';
+ if(bm){
+  const slots=(r.slots||[]).map(s=>`<span class="mod ${r.online&&s.linked?'active':''}"><b>TS${esc(s.slot)}</b> · ${esc(s.linked?'linked':'not linked')}</span>`).join('');
+  const groups=(r.talkgroups||[]).map(t=>`<tr><td>TS${esc(t.slot)}</td><td>${esc(t.talkgroup)}</td><td>${esc(t.kind)}</td></tr>`).join('');
+  const heard=(r.last_heard||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.time)}</td><td>${esc(h.duration??'—')}</td><td>${esc(h.message)}</td></tr>`).join('');
+  details=`<section><h3>Reported slot state</h3><div class="modules">${slots||'<span class="muted">Not published</span>'}</div>${!r.online?'<p class="muted">Last reported state; repeater is not currently online.</p>':''}</section>
+   <section><h3>Talkgroups</h3><div class="table"><table><thead><tr><th>Slot</th><th>Talkgroup</th><th>Subscription</th></tr></thead><tbody>${groups||`<tr><td colspan="3" class="muted">${esc(r.profile_error||'No talkgroups published.')}</td></tr>`}</tbody></table></div></section>
+   <section><h3>Last Heard</h3><div class="table"><table><thead><tr><th>Callsign / ID</th><th>Mode</th><th>Target</th><th>Time (UTC)</th><th>Duration (s)</th><th>Talker alias</th></tr></thead><tbody>${heard||`<tr><td colspan="6" class="muted">${esc(r.last_heard_error||'No Last Heard activity returned.')}</td></tr>`}</tbody></table></div><p class="muted">Activity refreshes at most once per minute.</p></section>
+   <a class="button" href="https://brandmeister.network/#/lh?ContextID=${encodeURIComponent(r.device_id||312543)}" target="_blank" rel="noopener">Open BrandMeister Last Heard ↗</a>`;
+ }else{
+  const modes=(r.modes||[]).map(m=>`<span class="mod active">${esc(m)}</span>`).join('');
+  const nets=(r.networks||[]).map(n=>`<span class="mod ${n.enabled?'active':''}">${esc(n.mode)} · ${n.enabled?'enabled':'disabled'}</span>`).join('');
+  const heard=(r.last_heard||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.via)}</td><td>${esc(h.time)}</td></tr>`).join('');
+  const localRows=(r.local_rf_activity||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.time)}</td><td>${esc(h.duration)}</td><td>${esc(h.ber)}</td><td>${esc(h.rssi)}</td></tr>`).join('');
+  const localSection=`<section><h3>Local RF Activity</h3><div class="table"><table><thead><tr><th>Callsign</th><th>Mode</th><th>Target</th><th>Time</th><th>Duration (s)</th><th>BER</th><th>RSSI</th></tr></thead><tbody>${localRows||'<tr><td colspan="7" class="muted">No Local RF Activity published.</td></tr>'}</tbody></table></div></section>`;
+  details=`<section><h3>Enabled modes</h3><div class="modules">${modes||'<span class="muted">Not published</span>'}</div></section>
+   <section><h3>Network status</h3><div class="modules">${nets||'<span class="muted">Not published</span>'}</div></section>
+   <section><h3>Gateway Activity</h3><div class="table"><table><thead><tr><th>Callsign</th><th>Mode</th><th>Target</th><th>Source</th><th>Time</th></tr></thead><tbody>${heard||'<tr><td colspan="5" class="muted">No Gateway Activity published.</td></tr>'}</tbody></table></div></section>${localSection}`;
+ }
+ return `<article class="card ${recentActivity.has(r.name)?'activity':''}">
+  <div class="chead"><div><div class="rname">${esc(r.name)}</div><div class="rtype">${bm?'DMR / BrandMeister':'Multimode / Pi-Star'} · ${esc(r.host)}</div></div><div class="status ${r.online?'on':'off'}"><span class="dot ${r.online?'dgreen':'dred'}"></span>${r.online?'ONLINE':'OFFLINE'}</div></div>
+  <section><p class="muted">${esc(r.error||r.status_note||'Status unavailable')}</p><div class="servicegrid">${fields}${radio}</div></section>
+  ${details}<a class="button" href="${esc(r.url)}" target="_blank" rel="noopener">Open Dashboard ↗</a></article>`;
 }
 
 async function refresh(){

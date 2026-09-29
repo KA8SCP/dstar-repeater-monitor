@@ -21,6 +21,17 @@ $REFLECTORS = [
         ],
     ],
 
+    // Keep the DMR identity distinct from the WB1GOF D-STAR gateway.
+    'WB1GOF_DMR_312543' => [
+        'name' => 'WB1GOF DMR 312543',
+        'type' => 'BRANDMEISTER',
+        'host' => 'brandmeister.network',
+        'device_id' => 312543,
+        'dashboard_url' => 'https://brandmeister.network/#/device/312543',
+        'urls' => ['https://api.brandmeister.network/v2/device/312543'],
+        'profile_url' => 'https://api.brandmeister.network/v2/device/312543/profile',
+    ],
+
     'K1HRO' => [
         'name' => 'K1HRO',
         'type' => 'DPLUS_GATEWAY',
@@ -94,5 +105,12 @@ $REFLECTORS = [
             'https://kd8qof.dstargateway.org/',
             'http://kd8qof.dstargateway.org/',
         ],
+    ],
+    'W1ATD_MULTIMODE' => [
+        'name' => 'W1ATD Multimode',
+        'type' => 'PISTAR',
+        'host' => 'stn4571.ip.irlp.net:41390',
+        'urls' => ['http://stn4571.ip.irlp.net:41390/'],
+        'timezone' => 'America/New_York',
     ],
 ];
