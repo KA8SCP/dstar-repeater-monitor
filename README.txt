@@ -1,10 +1,17 @@
 # Digital Repeater Monitor
 
-**Version 1.0.2 — September 29, 2026**
+**Version 1.0.3 — September 30, 2026**
 
 Web-based monitoring for D-STAR DPLUS gateways, BrandMeister DMR, and Pi-Star multimode repeaters. This is a separate project from the D-STAR Reflector Monitor; the repository remains `KA8SCP/dstar-repeater-monitor`.
 
-## What's new in v1.0.2
+## What's new in v1.0.3
+
+- Adds VE3RXR and VE3TTT with separate DPLUS and g2_link modules and activity.
+- Adds Page Viewers with active page counts and available IPv4 addresses.
+- Normalizes network-wide Last Heard to Eastern time and sorts by absolute time.
+- Removes the Reported Users and Reported Modules summary tiles; Repeaters, Online, and Offline remain.
+
+## Included from v1.0.2
 
 - Adds WB1GOF DMR 312543 as a separate repeater from WB1GOF D-STAR, with distinct cache and history identities.
 - Adds W1ATD Multimode with enabled modes, network indicators, radio details, Gateway Activity, and a separate Local RF Activity table.
@@ -15,7 +22,7 @@ Web-based monitoring for D-STAR DPLUS gateways, BrandMeister DMR, and Pi-Star mu
 
 ## Monitored repeaters
 
-The ten cards appear in this order:
+The twelve cards appear in this order:
 
 | Repeater | Type | Dashboard |
 |---|---|---|
@@ -28,13 +35,15 @@ The ten cards appear in this order:
 | W1SCV | D-STAR DPLUS | https://w1scv.dstargateway.org/ |
 | KS1R | D-STAR DPLUS | https://ks1r.dstargateway.org/ |
 | KD8QOF | D-STAR DPLUS | https://kd8qof.dstargateway.org/ |
+| VE3RXR | D-STAR DPLUS + g2_link | http://ve3rxr.dstargateway.org/ |
+| VE3TTT | D-STAR DPLUS + g2_link | http://ve3ttt.dstargateway.org/ |
 | W1ATD Multimode | Pi-Star | http://stn4571.ip.irlp.net:41390/ |
 
 ## D-STAR gateways
 
 DPLUS cards retain module/link state, software version, Remote Users, user messages, Last TX module/status, connection type, Last Heard, response time, and source-dashboard links. Modules are displayed alphabetically; non-module states such as `listening` are preserved.
 
-WB1GOF's g2_link software, dashboard version, module/link state, and Last Heard remain separate from its authoritative DPLUS data. Empty g2_link sections are not displayed on other gateways.
+WB1GOF's g2_link software, dashboard version, module/link state, and Last Heard remain separate from its authoritative DPLUS data. VE3RXR and VE3TTT use their separate DPLUS status pages and `/fs.html` g2_link pages. A g2_link retrieval failure is displayed separately and does not override DPLUS availability. Empty g2_link sections are not displayed on other gateways.
 
 ## WB1GOF DMR 312543
 
@@ -67,6 +76,16 @@ Browser refresh and normal status caching default to 15 seconds. BrandMeister ac
 
 Availability history records the monitor's observations. Source retrieval failures currently produce an offline status, so an outage in this history can reflect an API/dashboard access problem rather than a failed radio. Consult the card's error message.
 
+## Time display and Page Viewers
+
+Network-wide Last Heard displays `YYYY-MM-DD HH:mm:ss EDT/EST` in America/New_York and sorts by the absolute timestamp. Original source times remain available in activity data. Invalid or ambiguous times display `Time unavailable`. Each DPLUS gateway has an explicit source timezone in config.php. Eastern clocks were checked on reachable dashboards; K1HRO and KD8QOF were unreachable during validation, so verify their configured timezone when access returns.
+
+Page Viewers sends a heartbeat every 30 seconds. An active page is one seen within 120 seconds; multiple tabs count separately, and shared IP addresses are grouped. These are page sessions and connections, not a count of individual people. Expired entries are removed on the next heartbeat. No cookies or persistent browser identifiers are used.
+
+IPv4 and IPv4-mapped IPv6 connections display IPv4 addresses. Native IPv6 sessions are counted separately with IPv4 unavailable; an IPv4 address cannot be inferred from native IPv6. The endpoint uses REMOTE_ADDR and ignores forwarded headers. A reverse proxy may therefore appear as the viewer address unless the web server is explicitly configured to restore trusted client addresses.
+
+The public panel exposes active IPv4 addresses. Viewer records are stored in data/viewers.sqlite; protect the entire data directory from HTTP access. The included data/.htaccess does this when Apache overrides are enabled. Otherwise use deploy/dstar-repeater-data-protection.conf for the production path, or an equivalent rule for your server.
+
 ## Requirements
 
 - Linux with Apache 2.4 or a compatible web server.
@@ -78,12 +97,17 @@ Availability history records the monitor's observations. Source retrieval failur
 
 The existing production directory is `/var/www/xlxd/dstar-repeater`.
 
-For a fresh installation, copy the application files and provide writable `cache/` and `data/` directories. For an upgrade from v1.0.1, back up the existing application files and deploy these four files together:
+For a fresh installation, copy the application files and provide writable `cache/` and `data/` directories. For an upgrade, back up the existing application files and deploy all root-level PHP files together, including the new `gateway_support.php`, `viewers.php`, and `viewers_api.php`. Install `data/.htaccess` without replacing existing databases.
 
-- `config.php`
-- `functions.php`
-- `digital_repeaters.php` (new)
-- `index.php`
+On the production Apache host, protect data before enabling viewers:
+
+```sh
+sudo install -m 644 deploy/dstar-repeater-data-protection.conf /etc/apache2/conf-available/dstar-repeater-data-protection.conf
+sudo a2enconf dstar-repeater-data-protection
+sudo apache2ctl configtest && sudo systemctl reload apache2
+```
+
+Adjust the Directory path in that configuration for other installations. Verify a request to `/dstar-repeater/data/viewers.sqlite` is denied after the first viewer heartbeat creates the file.
 
 Review any site-specific configuration before replacing `config.php`. Preserve existing `data/` and `cache/` contents; no database migration is required. Allow at least 60 seconds for caches to refresh, then reload the browser. Do not include runtime cache files, databases, SSH keys, or development runtimes in Git.
 
@@ -95,6 +119,8 @@ Run in the staged application directory before deployment:
 for f in *.php; do php -l "$f" || exit 1; done
 php tests/digital_repeaters_test.php
 php tests/brandmeister_heard_test.php
+php tests/v103_test.php
+node tests/frontend_test.cjs # optional Node.js UI checks
 ```
 
 The tests use captured public fixtures and cover parsing, distinct identities, card order, Pi-Star local/gateway separation, timestamps, BrandMeister history decoding, and error handling. They do not establish live connectivity.
@@ -107,6 +133,8 @@ php -r 'require "functions.php"; echo json_encode(brandmeister_heard_snapshot(31
 
 On September 29, 2026, both test suites and PHP lint passed on the production Linux server. The live BrandMeister check returned 25 records with no error. After deployment, the operator confirmed DMR Last Heard and the requested card placement.
 
+On September 30, 2026, the v1.0.3 parser, timestamp, viewer expiry, IPv4 mapping, and existing regression suites passed on Linux. Live VE3RXR and VE3TTT checks returned DPLUS 2.2t and g2_link 4.00 with activity from both sources.
+
 ## Operational notes
 
 - K1MRA retains the existing per-gateway `insecure_ssl` exception because its dashboard previously presented an incomplete certificate chain. Other gateways retain certificate verification. Do not disable TLS validation globally.
@@ -116,4 +144,4 @@ On September 29, 2026, both test suites and PHP lint passed on the production Li
 
 ## Earlier release
 
-v1.0.1 introduced DPLUS Remote Users and preserved WB1GOF's separate DPLUS and g2_link information. Those features remain in v1.0.2.
+v1.0.1 introduced DPLUS Remote Users and preserved WB1GOF's separate DPLUS and g2_link information. Those features remain in v1.0.3.

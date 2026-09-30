@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/digital_repeaters.php';
+require_once __DIR__ . '/gateway_support.php';
 
 function blank_status(array $r): array {
     return [
@@ -1214,6 +1215,10 @@ function get_reflector(array $r): array {
             $raw['response_ms'],
             $raw['url']
         );
+        if (!empty($r['g2_urls'])) {
+            add_gateway_g2($s, $r, fetch_any($r['g2_urls'], !empty($r['insecure_ssl'])));
+        }
+        $s['url'] = $r['dashboard_url'] ?? $s['url'];
     }
     elseif ($type === 'DCS') {
         $s = parse_dcs($r,$raw['body'],$raw['response_ms'],$raw['url']);
@@ -1352,6 +1357,7 @@ function get_reflector(array $r): array {
         $s = parse_dplus($r,$raw['body'],$raw['response_ms'],$raw['url']);
     }
 
+    $s['timezone'] = $r['timezone'] ?? null;
     $s['http_code'] = $raw['http_code'];
     $s['checked_at'] = gmdate('c');
     $s['cached'] = false;
@@ -1366,6 +1372,9 @@ function all_reflectors(array $reflectors): array {
 }
 
 function network_last_heard(array $statuses): array {
+    global $REFLECTORS;
+    $zones = [];
+    foreach ($REFLECTORS as $config) $zones[$config['name']] = $config['timezone'] ?? null;
     $rows = [];
 
     foreach ($statuses as $s) {
@@ -1376,30 +1385,12 @@ function network_last_heard(array $statuses): array {
             $x['reflector'] = $s['name'];
             $x['type'] = $x['type'] ?? ($s['type'] ?? '');
 
-            $rows[] = $x;
+            $rows[] = normalize_network_activity($x, $s['timezone'] ?? $zones[$s['name']] ?? null);
         }
     }
 
-    // Sort newest activity first across all reflector families.
-    usort($rows, function($a, $b) {
-        $getTime = function($x) {
-            $v = $x['last_heard'] ?? ($x['time'] ?? '');
-            if ($v === '') return 0;
-
-            // REF/DPLUS: 2026/09/22 10:13:56
-            $dt = DateTime::createFromFormat('Y/m/d H:i:s', $v);
-            if ($dt !== false) return $dt->getTimestamp();
-
-            // XLXD: 22.09.2026 10:13
-            $dt = DateTime::createFromFormat('d.m.Y H:i', $v);
-            if ($dt !== false) return $dt->getTimestamp();
-
-            $ts = strtotime($v);
-            return $ts !== false ? $ts : 0;
-        };
-
-        return $getTime($b) <=> $getTime($a);
-    });
+    // Sort by absolute instants; unknown times sort last.
+    usort($rows, fn($a, $b) => ($b['timestamp'] ?? PHP_INT_MIN) <=> ($a['timestamp'] ?? PHP_INT_MIN));
 
     return array_slice($rows, 0, 150);
 }

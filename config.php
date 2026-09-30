@@ -14,6 +14,7 @@ $REFLECTORS = [
     'WB1GOF' => [
         'name' => 'WB1GOF',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'wb1gof.dstargateway.org',
         'urls' => [
             'https://wb1gof.dstargateway.org/',
@@ -35,6 +36,7 @@ $REFLECTORS = [
     'K1HRO' => [
         'name' => 'K1HRO',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'k1hro.dstargateway.org',
         'urls' => [
             'https://k1hro.dstargateway.org/',
@@ -45,6 +47,7 @@ $REFLECTORS = [
     'W1MRA' => [
         'name' => 'W1MRA',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'w1mra.dstargateway.org',
         'urls' => [
             'https://w1mra.dstargateway.org/',
@@ -55,6 +58,7 @@ $REFLECTORS = [
     'K1MRA' => [
         'name' => 'K1MRA',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
 
         // K1MRA currently serves an incomplete HTTPS certificate chain.
         // Limit disabled certificate verification to this gateway only.
@@ -70,6 +74,7 @@ $REFLECTORS = [
     'KA1EAR' => [
         'name' => 'KA1EAR',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'ka1ear.dstargateway.org',
         'urls' => [
             'https://ka1ear.dstargateway.org/',
@@ -80,6 +85,7 @@ $REFLECTORS = [
     'W1SCV' => [
         'name' => 'W1SCV',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'w1scv.dstargateway.org',
         'urls' => [
             'https://w1scv.dstargateway.org/',
@@ -90,6 +96,7 @@ $REFLECTORS = [
     'KS1R' => [
         'name' => 'KS1R',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'ks1r.dstargateway.org',
         'urls' => [
             'https://ks1r.dstargateway.org/',
@@ -100,11 +107,30 @@ $REFLECTORS = [
     'KD8QOF' => [
         'name' => 'KD8QOF',
         'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
         'host' => 'kd8qof.dstargateway.org',
         'urls' => [
             'https://kd8qof.dstargateway.org/',
             'http://kd8qof.dstargateway.org/',
         ],
+    ],
+    'VE3RXR' => [
+        'name' => 'VE3RXR',
+        'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
+        'host' => 've3rxr.dstargateway.org',
+        'dashboard_url' => 'http://ve3rxr.dstargateway.org/',
+        'urls' => ['http://ve3rxr.dstargateway.org/dplus-status.html'],
+        'g2_urls' => ['http://ve3rxr.dstargateway.org/fs.html'],
+    ],
+    'VE3TTT' => [
+        'name' => 'VE3TTT',
+        'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/New_York',
+        'host' => 've3ttt.dstargateway.org',
+        'dashboard_url' => 'http://ve3ttt.dstargateway.org/',
+        'urls' => ['http://ve3ttt.dstargateway.org/status.html'],
+        'g2_urls' => ['http://ve3ttt.dstargateway.org/fs.html'],
     ],
     'W1ATD_MULTIMODE' => [
         'name' => 'W1ATD Multimode',
