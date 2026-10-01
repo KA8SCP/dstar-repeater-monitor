@@ -37,25 +37,25 @@ section{padding:0 12px 12px}h3{font-size:13px;margin:5px 0 8px;color:#cbd5e1;bor
 </style>
 </head>
 <body>
-<header><div class="wrap"><div class="title">ðŸ“¡ Digital Repeater Monitor</div><div class="sub">D-STAR gateways Â· WB1GOF DMR 312543 Â· W1ATD Multimode</div></div></header>
+<header><div class="wrap"><div class="title">📡 Digital Repeater Monitor</div><div class="sub">D-STAR gateways · WB1GOF DMR 312543 · W1ATD Multimode</div></div></header>
 <main class="wrap">
 <div id="alertbar" class="alertbar"></div>
 <div class="stats" id="stats"></div>
 <div class="toolbar">
-<input id="filter" placeholder="Filter callsign, repeater or hostâ€¦">
+<input id="filter" placeholder="Filter callsign, repeater or host…">
 <select id="type"><option value="">All types</option><option value="DPLUS_GATEWAY">DPLUS Gateway</option><option value="BRANDMEISTER">DMR / BrandMeister</option><option value="PISTAR">Multimode / Pi-Star</option></select>
-<div class="updated" id="updated">Loadingâ€¦</div>
+<div class="updated" id="updated">Loading…</div>
 </div>
 <div class="network panel" style="padding:14px">
 <h2>Network-wide Last Heard</h2>
 <div class="table"><table><thead><tr><th>Repeater</th><th>Callsign</th><th>User Message</th><th>Module / Mode</th><th>Target</th><th>Time (Eastern)</th></tr></thead><tbody id="lastheard"></tbody></table></div>
 </div>
-<div class="network panel" style="padding:14px"><h2>24-hour Availability History</h2><div id="history" class="historygrid"><span class="muted">Loading historyâ€¦</span></div></div>
+<div class="network panel" style="padding:14px"><h2>24-hour Availability History</h2><div id="history" class="historygrid"><span class="muted">Loading history…</span></div></div>
 <div class="grid" id="cards"></div>
 <div class="network panel" style="padding:14px"><h2>Page Viewers</h2>
 <p class="muted">Open pages active within the last two minutes. IPv4 and IPv6 connections are listed below.</p>
-<div id="viewers">Loading viewer informationâ€¦</div></div>
-<div class="footer">Auto-refresh every <?=REFRESH_SECONDS?> seconds Â· Public repeater dashboards and BrandMeister API. Pi-Star availability measures dashboard reachability.</div>
+<div id="viewers">Loading viewer information…</div></div>
+<div class="footer">Auto-refresh every <?=REFRESH_SECONDS?> seconds · Public repeater dashboards and BrandMeister API. Pi-Star availability measures dashboard reachability.</div>
 </main>
 <script>
 const initial = <?=json_encode($initial,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_SLASHES)?>;
@@ -81,10 +81,10 @@ function detectChanges(oldData,newData){
  for(const h of (newData.last_heard||[])){if(!oldHeard.has(heardKey(h))) recentActivity.add(h.reflector);}
 }
 function notify(msg){if(Notification.permission==='granted') new Notification('D-STAR Monitor',{body:msg});}
-function staleCheck(){const age=Math.floor((Date.now()-lastSuccess)/1000), b=document.querySelector('#alertbar');if(age>REFRESH_MS/1000*3){b.style.display='block';b.textContent=`DATA STALE â€” last successful update ${age} seconds ago`;}else b.style.display='none';}
+function staleCheck(){const age=Math.floor((Date.now()-lastSuccess)/1000), b=document.querySelector('#alertbar');if(age>REFRESH_MS/1000*3){b.style.display='block';b.textContent=`DATA STALE — last successful update ${age} seconds ago`;}else b.style.display='none';}
 async function loadHistory(){
  const el=document.querySelector('#history');const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),5000);
- try{const r=await fetch('history_api.php?hours=24&ts='+Date.now(),{cache:'no-store',signal:controller.signal});if(!r.ok)throw new Error('HTTP '+r.status);const h=await r.json();if(!h.enabled){el.innerHTML='<span class="muted">History temporarily unavailable. Live repeater monitoring is still operating.</span>';return;}el.innerHTML=(h.reflectors||[]).map(x=>`<div class="historyitem"><b>${esc(x.reflector)}</b><div>${esc(x.availability_pct)}% available</div><span class="muted">${esc(x.samples)} samples Â· avg ${esc(x.avg_response_ms??'â€”')} ms</span></div>`).join('')||'<span class="muted">History will appear after samples are collected.</span>';}
+ try{const r=await fetch('history_api.php?hours=24&ts='+Date.now(),{cache:'no-store',signal:controller.signal});if(!r.ok)throw new Error('HTTP '+r.status);const h=await r.json();if(!h.enabled){el.innerHTML='<span class="muted">History temporarily unavailable. Live repeater monitoring is still operating.</span>';return;}el.innerHTML=(h.reflectors||[]).map(x=>`<div class="historyitem"><b>${esc(x.reflector)}</b><div>${esc(x.availability_pct)}% available</div><span class="muted">${esc(x.samples)} samples · avg ${esc(x.avg_response_ms??'—')} ms</span></div>`).join('')||'<span class="muted">History will appear after samples are collected.</span>';}
  catch(e){el.innerHTML='<span class="muted">History temporarily unavailable. Live repeater monitoring is still operating.</span>';}finally{clearTimeout(timer);}
 }
 function render(){
@@ -97,13 +97,13 @@ function render(){
  document.querySelector('#updated').textContent='Updated '+easternTime(data.updated);
  document.querySelector('#cards').innerHTML=rs.map(card).join('');
  document.querySelector('#lastheard').innerHTML=(data.last_heard||[]).slice(0,100).map(x=>{
-  const repeater=x.reflector||'â€”';
-  const callsign=x.callsign||'â€”';
-  const message=x.message||x.user||'â€”';
-  const module=x.mode||x.last_tx_status||x.module||'â€”';
+  const repeater=x.reflector||'—';
+  const callsign=x.callsign||'—';
+  const message=x.message||x.user||'—';
+  const module=x.mode||x.last_tx_status||x.module||'—';
   const heard=x.display_time||'Time unavailable';
 
-  return `<tr><td>${esc(repeater)}</td><td class="call">${esc(callsign)}</td><td>${esc(message)}</td><td>${esc(module)}</td><td>${esc(x.target||'â€”')}</td><td>${esc(heard)}</td></tr>`;
+  return `<tr><td>${esc(repeater)}</td><td class="call">${esc(callsign)}</td><td>${esc(message)}</td><td>${esc(module)}</td><td>${esc(x.target||'—')}</td><td>${esc(heard)}</td></tr>`;
  }).join('')||'<tr><td colspan="6" class="muted">No Last Heard data published.</td></tr>';
 }
 function serviceFields(r){
@@ -133,7 +133,7 @@ function card(r){
   ? dplusMods.map(m=>{
       const linked=m.linked_to||'unlinked';
       const active=String(linked).toLowerCase()!=='unlinked';
-      return `<span class="mod ${active?'active':''}"><b>${esc(m.module)}</b> Â· ${esc(linked)}</span>`;
+      return `<span class="mod ${active?'active':''}"><b>${esc(m.module)}</b> · ${esc(linked)}</span>`;
     }).join('')
   : '<span class="muted">No DPLUS module data published.</span>';
 
@@ -176,7 +176,7 @@ function card(r){
    ? g2Mods.map(m=>{
        const linked=m.linked_to||'Not linked';
        const active=!/^not linked$/i.test(String(linked));
-       return `<span class="mod ${active?'active':''}"><b>${esc(m.module)}</b> Â· ${esc(linked)}</span>`;
+       return `<span class="mod ${active?'active':''}"><b>${esc(m.module)}</b> · ${esc(linked)}</span>`;
      }).join('')
    : '<span class="muted">No g2_link module data published.</span>';
 
@@ -228,7 +228,7 @@ function card(r){
   <div class="chead">
    <div>
     <div class="rname">${esc(r.name)}</div>
-    <div class="rtype">DPLUS Gateway Â· ${esc(r.host)}</div>
+    <div class="rtype">DPLUS Gateway · ${esc(r.host)}</div>
    </div>
    <div class="status ${r.online?'on':'off'}">
     <span class="dot ${r.online?'dgreen':'dred'}"></span>${r.online?'ONLINE':'OFFLINE'}
@@ -249,7 +249,7 @@ function card(r){
     <span>Remote Users</span>
    </div>
    <div class="metric">
-    <b>${r.response_ms??'â€”'}${r.response_ms!==null&&r.response_ms!==undefined?' ms':''}</b>
+    <b>${r.response_ms??'—'}${r.response_ms!==null&&r.response_ms!==undefined?' ms':''}</b>
     <span>Response</span>
    </div>
   </div>
@@ -290,7 +290,7 @@ function card(r){
 
   ${g2Section}
 
-  <a class="button" href="${esc(r.url)}" target="_blank" rel="noopener">Open Dashboard â†—</a>
+  <a class="button" href="${esc(r.url)}" target="_blank" rel="noopener">Open Dashboard ↗</a>
  </article>`;
 }
 
@@ -302,16 +302,16 @@ function digitalCard(r){
   (bm?item('DMR ID',r.device_id)+item('Last seen (Eastern)',r.last_seen_display):item('Dashboard',r.dashboard_version));
  let details='';
  if(bm){
-  const slots=(r.slots||[]).map(s=>`<span class="mod ${r.online&&s.linked?'active':''}"><b>TS${esc(s.slot)}</b> Â· ${esc(s.linked?'linked':'not linked')}</span>`).join('');
+  const slots=(r.slots||[]).map(s=>`<span class="mod ${r.online&&s.linked?'active':''}"><b>TS${esc(s.slot)}</b> · ${esc(s.linked?'linked':'not linked')}</span>`).join('');
   const groups=(r.talkgroups||[]).map(t=>`<tr><td>TS${esc(t.slot)}</td><td>${esc(t.talkgroup)}</td><td>${esc(t.kind)}</td></tr>`).join('');
-  const heard=(r.last_heard||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.display_time||'Time unavailable')}</td><td>${esc(h.duration??'â€”')}</td><td>${esc(h.message)}</td></tr>`).join('');
+  const heard=(r.last_heard||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.display_time||'Time unavailable')}</td><td>${esc(h.duration??'—')}</td><td>${esc(h.message)}</td></tr>`).join('');
   details=`<section><h3>Reported slot state</h3><div class="modules">${slots||'<span class="muted">Not published</span>'}</div>${!r.online?'<p class="muted">Last reported state; repeater is not currently online.</p>':''}</section>
    <section><h3>Talkgroups</h3><div class="table"><table><thead><tr><th>Slot</th><th>Talkgroup</th><th>Subscription</th></tr></thead><tbody>${groups||`<tr><td colspan="3" class="muted">${esc(r.profile_error||'No talkgroups published.')}</td></tr>`}</tbody></table></div></section>
    <section><h3>Last Heard</h3><div class="table"><table><thead><tr><th>Callsign / ID</th><th>Mode</th><th>Target</th><th>Time (Eastern)</th><th>Duration (s)</th><th>Talker alias</th></tr></thead><tbody>${heard||`<tr><td colspan="6" class="muted">${esc(r.last_heard_error||'No Last Heard activity returned.')}</td></tr>`}</tbody></table></div><p class="muted">Activity refreshes at most once per minute.</p></section>
-   <a class="button" href="https://brandmeister.network/#/lh?ContextID=${encodeURIComponent(r.device_id||312543)}" target="_blank" rel="noopener">Open BrandMeister Last Heard â†—</a>`;
+   <a class="button" href="https://brandmeister.network/#/lh?ContextID=${encodeURIComponent(r.device_id||312543)}" target="_blank" rel="noopener">Open BrandMeister Last Heard ↗</a>`;
  }else{
   const modes=(r.modes||[]).map(m=>`<span class="mod active">${esc(m)}</span>`).join('');
-  const nets=(r.networks||[]).map(n=>`<span class="mod ${n.enabled?'active':''}">${esc(n.mode)} Â· ${n.enabled?'enabled':'disabled'}</span>`).join('');
+  const nets=(r.networks||[]).map(n=>`<span class="mod ${n.enabled?'active':''}">${esc(n.mode)} · ${n.enabled?'enabled':'disabled'}</span>`).join('');
   const heard=(r.last_heard||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.via)}</td><td>${esc(h.display_time||'Time unavailable')}</td></tr>`).join('');
   const localRows=(r.local_rf_activity||[]).map(h=>`<tr><td class="call">${esc(h.callsign)}</td><td>${esc(h.mode)}</td><td>${esc(h.target)}</td><td>${esc(h.display_time||'Time unavailable')}</td><td>${esc(h.duration)}</td><td>${esc(h.ber)}</td><td>${esc(h.rssi)}</td></tr>`).join('');
   const localSection=`<section><h3>Local RF Activity</h3><div class="table"><table><thead><tr><th>Callsign</th><th>Mode</th><th>Target</th><th>Time (Eastern)</th><th>Duration (s)</th><th>BER</th><th>RSSI</th></tr></thead><tbody>${localRows||'<tr><td colspan="7" class="muted">No Local RF Activity published.</td></tr>'}</tbody></table></div></section>`;
@@ -320,9 +320,9 @@ function digitalCard(r){
    <section><h3>Gateway Activity</h3><div class="table"><table><thead><tr><th>Callsign</th><th>Mode</th><th>Target</th><th>Source</th><th>Time (Eastern)</th></tr></thead><tbody>${heard||'<tr><td colspan="5" class="muted">No Gateway Activity published.</td></tr>'}</tbody></table></div></section>${localSection}`;
  }
  return `<article class="card ${recentActivity.has(r.name)?'activity':''}">
-  <div class="chead"><div><div class="rname">${esc(r.name)}</div><div class="rtype">${bm?'DMR / BrandMeister':'Multimode / Pi-Star'} Â· ${esc(r.host)}</div></div><div class="status ${r.online?'on':'off'}"><span class="dot ${r.online?'dgreen':'dred'}"></span>${r.online?'ONLINE':'OFFLINE'}</div></div>
+  <div class="chead"><div><div class="rname">${esc(r.name)}</div><div class="rtype">${bm?'DMR / BrandMeister':'Multimode / Pi-Star'} · ${esc(r.host)}</div></div><div class="status ${r.online?'on':'off'}"><span class="dot ${r.online?'dgreen':'dred'}"></span>${r.online?'ONLINE':'OFFLINE'}</div></div>
   <section><p class="muted">${esc(r.error||r.status_note||'Status unavailable')}</p><div class="servicegrid">${fields}${radio}</div></section>
-  ${details}<a class="button" href="${esc(r.url)}" target="_blank" rel="noopener">Open Dashboard â†—</a></article>`;
+  ${details}<a class="button" href="${esc(r.url)}" target="_blank" rel="noopener">Open Dashboard ↗</a></article>`;
 }
 
 async function refresh(){
@@ -330,7 +330,7 @@ async function refresh(){
   const r=await fetch('api.php?ts='+Date.now(),{cache:'no-store'});
   if(!r.ok) throw new Error('HTTP '+r.status);
   const next=await r.json(); detectChanges(data,next); previous=data; data=next; lastSuccess=Date.now(); render(); staleCheck();
- }catch(e){document.querySelector('#updated').textContent='Update failed: '+e.message+' Â· showing last data';}
+ }catch(e){document.querySelector('#updated').textContent='Update failed: '+e.message+' · showing last data';}
 }
 // Per-page random session; no tracking cookie or persistent browser identifier.
 async function startViewers(){
@@ -343,7 +343,7 @@ async function startViewers(){
     const response=await fetch('viewers_api.php',{method:'POST',cache:'no-store',signal:controller.signal,body:new URLSearchParams({session})});
     if(!response.ok)throw new Error('Viewer request failed');
     const v=await response.json();if(!v.ok)throw new Error('Viewer data unavailable');
-    el.innerHTML=`<p><b>${esc(v.active_sessions)}</b> active page sessions Â· <b>${esc(v.unique_ips)}</b> unique IP address${v.unique_ips===1?'':'es'}</p>
+    el.innerHTML=`<p><b>${esc(v.active_sessions)}</b> active page sessions · <b>${esc(v.unique_ips)}</b> unique IP address${v.unique_ips===1?'':'es'}</p>
      <div class="table"><table><thead><tr><th>IP address</th><th>Sessions</th><th>Last seen</th></tr></thead><tbody>${v.addresses.map(a=>`<tr><td>${esc(a.ip)}</td><td>${esc(a.sessions)}</td><td>${esc(easternTime(a.last_seen))}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No active viewers currently reported.</td></tr>'}</tbody></table></div>`;
    }catch(e){el.textContent='Viewer information temporarily unavailable.';}
    finally{clearTimeout(timer);setTimeout(poll,30000);}

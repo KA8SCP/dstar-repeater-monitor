@@ -40,3 +40,6 @@ for (const type of ['BRANDMEISTER','PISTAR','DPLUS_GATEWAY']) {
  assert(!html.includes('Time (UTC)'));
 }
 console.log('PASS: all card activity renders Eastern timestamps; summer and winter labels correct');
+
+assert(!/[\u00c2\u00c3\u00e2\u00f0]/.test(source), 'No encoding corruption in page source');
+console.log('PASS: page source retains correct UTF-8 characters');

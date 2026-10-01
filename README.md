@@ -1,6 +1,6 @@
 # Digital Repeater Monitor
 
-**Version 1.0.3 â€” September 30, 2026**
+**Version 1.0.3 — September 30, 2026**
 
 Web-based monitoring for D-STAR DPLUS gateways, BrandMeister DMR, and Pi-Star multimode repeaters. This is a separate project from the D-STAR Reflector Monitor; the repository remains `KA8SCP/dstar-repeater-monitor`.
 
