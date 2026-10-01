@@ -1,6 +1,6 @@
 # Digital Repeater Monitor
 
-**Version 1.0.3 — September 30, 2026**
+**Version 1.0.3 â€” September 30, 2026**
 
 Web-based monitoring for D-STAR DPLUS gateways, BrandMeister DMR, and Pi-Star multimode repeaters. This is a separate project from the D-STAR Reflector Monitor; the repository remains `KA8SCP/dstar-repeater-monitor`.
 
@@ -78,7 +78,7 @@ Availability history records the monitor's observations. Source retrieval failur
 
 ## Time display and Page Viewers
 
-Network-wide Last Heard displays `YYYY-MM-DD HH:mm:ss EDT/EST` in America/New_York and sorts by the absolute timestamp. Original source times remain available in activity data. Invalid or ambiguous times display `Time unavailable`. Each DPLUS gateway has an explicit source timezone in config.php. Eastern clocks were checked on reachable dashboards; K1HRO and KD8QOF were unreachable during validation, so verify their configured timezone when access returns.
+All repeater card activity (including DMR Last Heard, DPLUS/g2_link, and Pi-Star Gateway and Local RF Activity), BrandMeister last-seen, Page Viewers last-seen, and the page update time use `YYYY-MM-DD HH:mm:ss EDT/EST`. Network-wide Last Heard displays the same format in America/New_York and sorts by the absolute timestamp. Original source times remain available in activity data. Invalid or ambiguous times display `Time unavailable`. Each DPLUS gateway has an explicit source timezone in config.php. Eastern clocks were checked on reachable dashboards; K1HRO and KD8QOF were unreachable during validation, so verify their configured timezone when access returns.
 
 Page Viewers sends a heartbeat every 30 seconds. An active page is one seen within 120 seconds; multiple tabs count separately, and shared IP addresses are grouped. These are page sessions and connections, not a count of individual people. Expired entries are removed on the next heartbeat. No cookies or persistent browser identifiers are used.
 

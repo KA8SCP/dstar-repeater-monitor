@@ -54,3 +54,13 @@ try {
     expect($v['active_sessions']===1 && count($v['addresses'])===1 && $v['addresses'][0]['ip']==='2001:db8::1','Stale sessions expire at two minutes');
 } finally { unlink($db); }
 echo "All v1.0.3 checks passed.\n";
+
+foreach (['2026-09-30T16:00:00Z'=>'2026-09-30 12:00:00 EDT', '2026-01-15T17:00:00Z'=>'2026-01-15 12:00:00 EST'] as $raw=>$display) {
+    $card=['last_seen'=>$raw];
+    foreach (['last_heard','dplus_last_heard','g2_last_heard','local_rf_activity'] as $field) $card[$field]=[['time'=>$raw]];
+    $card=normalize_card_times($card,'America/New_York');
+    foreach (['last_heard','dplus_last_heard','g2_last_heard','local_rf_activity'] as $field) {
+        expect($card[$field][0]['display_time']===$display && $card[$field][0]['time']===$raw, 'Card '.$field.' Eastern display preserves source '.$display);
+    }
+    expect($card['last_seen_display']===$display,'Card last-seen Eastern display');
+}

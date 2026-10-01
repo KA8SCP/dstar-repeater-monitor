@@ -30,3 +30,13 @@ assert(!source.includes('Reported Users') && !source.includes('Reported Modules'
 assert(source.includes('Time (Eastern)') && source.includes('x.display_time'));
 assert(source.includes('Page Viewers'));
 console.log('PASS: simplified summary, normalized network time, and Page Viewers panel');
+
+assert.equal(context.easternTime('2026-09-30T16:00:00Z'),'2026-09-30 12:00:00 EDT');
+assert.equal(context.easternTime('2026-01-15T17:00:00Z'),'2026-01-15 12:00:00 EST');
+for (const type of ['BRANDMEISTER','PISTAR','DPLUS_GATEWAY']) {
+ const row={callsign:'A1AAA',time:'2026-09-30T16:00:00Z',display_time:'2026-09-30 12:00:00 EDT'};
+ const html=context.card({name:'Test',type,online:true,last_heard:[row],dplus_last_heard:[row],g2_link_version:'4',g2_last_heard:[row],local_rf_activity:[row],last_seen_display:row.display_time});
+ assert(html.includes(row.display_time) && !html.includes(row.time));
+ assert(!html.includes('Time (UTC)'));
+}
+console.log('PASS: all card activity renders Eastern timestamps; summer and winter labels correct');

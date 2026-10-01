@@ -53,3 +53,14 @@ function normalize_network_activity(array $row, ?string $timezone): array {
         : 'Time unavailable';
     return $row;
 }
+
+// Apply after cache retrieval so cached and fresh cards share the same display.
+function normalize_card_times(array $status, ?string $timezone): array {
+    foreach (['last_heard', 'dplus_last_heard', 'g2_last_heard', 'local_rf_activity'] as $field) {
+        if (isset($status[$field])) {
+            $status[$field] = array_map(fn($row) => normalize_network_activity($row, $timezone), $status[$field]);
+        }
+    }
+    $status['last_seen_display'] = normalize_network_activity(['time'=>$status['last_seen'] ?? ''], $timezone)['display_time'];
+    return $status;
+}

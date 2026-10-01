@@ -179,7 +179,7 @@ function parse_xlxd(array $r, string $html, int $ms, string $url): array {
     $versions = extract_xlxd_versions($plain);
     $s['xlx_version'] = $versions['xlx_version'];
     $s['dashboard_version'] = $versions['dashboard_version'];
-    $s['version'] = trim(($s['xlx_version'] ?? '').(($s['xlx_version'] && $s['dashboard_version']) ? ' · ' : '').($s['dashboard_version'] ? 'Dashboard '.$s['dashboard_version'] : '')) ?: null;
+    $s['version'] = trim(($s['xlx_version'] ?? '').(($s['xlx_version'] && $s['dashboard_version']) ? ' Â· ' : '').($s['dashboard_version'] ? 'Dashboard '.$s['dashboard_version'] : '')) ?: null;
 
     // XLXD Users / Modules table.
     foreach (find_tables($tables, ['Module','Users','DPlus']) as $t) {
@@ -1367,7 +1367,7 @@ function get_reflector(array $r): array {
 
 function all_reflectors(array $reflectors): array {
     $out=[];
-    foreach ($reflectors as $r) $out[] = get_reflector($r);
+    foreach ($reflectors as $r) $out[] = normalize_card_times(get_reflector($r), $r['timezone'] ?? null);
     return $out;
 }
 
