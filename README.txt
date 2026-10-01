@@ -7,7 +7,7 @@ Web-based monitoring for D-STAR DPLUS gateways, BrandMeister DMR, and Pi-Star mu
 ## What's new in v1.0.3
 
 - Adds VE3RXR and VE3TTT with separate DPLUS and g2_link modules and activity.
-- Adds Page Viewers with active page counts and available IPv4 addresses.
+- Adds Page Viewers with active page counts and IPv4 or IPv6 addresses, below the repeater cards.
 - Normalizes network-wide Last Heard to Eastern time and sorts by absolute time.
 - Removes the Reported Users and Reported Modules summary tiles; Repeaters, Online, and Offline remain.
 
@@ -82,9 +82,9 @@ Network-wide Last Heard displays `YYYY-MM-DD HH:mm:ss EDT/EST` in America/New_Yo
 
 Page Viewers sends a heartbeat every 30 seconds. An active page is one seen within 120 seconds; multiple tabs count separately, and shared IP addresses are grouped. These are page sessions and connections, not a count of individual people. Expired entries are removed on the next heartbeat. No cookies or persistent browser identifiers are used.
 
-IPv4 and IPv4-mapped IPv6 connections display IPv4 addresses. Native IPv6 sessions are counted separately with IPv4 unavailable; an IPv4 address cannot be inferred from native IPv6. The endpoint uses REMOTE_ADDR and ignores forwarded headers. A reverse proxy may therefore appear as the viewer address unless the web server is explicitly configured to restore trusted client addresses.
+IPv4 and IPv4-mapped IPv6 connections display IPv4 addresses. Native IPv6 connections display their IPv6 address in the same IP address table, with session counts and last-seen times. Addresses identify connections, not individual people. The endpoint uses REMOTE_ADDR and ignores forwarded headers. A reverse proxy may therefore appear as the viewer address unless the web server is explicitly configured to restore trusted client addresses.
 
-The public panel exposes active IPv4 addresses. Viewer records are stored in data/viewers.sqlite; protect the entire data directory from HTTP access. The included data/.htaccess does this when Apache overrides are enabled. Otherwise use deploy/dstar-repeater-data-protection.conf for the production path, or an equivalent rule for your server.
+The public panel exposes active IPv4 and IPv6 addresses. Viewer records are stored in data/viewers.sqlite; protect the entire data directory from HTTP access. The included data/.htaccess does this when Apache overrides are enabled. Otherwise use deploy/dstar-repeater-data-protection.conf for the production path, or an equivalent rule for your server.
 
 ## Requirements
 

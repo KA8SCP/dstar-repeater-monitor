@@ -53,7 +53,7 @@ section{padding:0 12px 12px}h3{font-size:13px;margin:5px 0 8px;color:#cbd5e1;bor
 <div class="network panel" style="padding:14px"><h2>24-hour Availability History</h2><div id="history" class="historygrid"><span class="muted">Loading history…</span></div></div>
 <div class="grid" id="cards"></div>
 <div class="network panel" style="padding:14px"><h2>Page Viewers</h2>
-<p class="muted">Open pages active within the last two minutes. IPv4 addresses are shown where available.</p>
+<p class="muted">Open pages active within the last two minutes. IPv4 and IPv6 connections are listed below.</p>
 <div id="viewers">Loading viewer information…</div></div>
 <div class="footer">Auto-refresh every <?=REFRESH_SECONDS?> seconds · Public repeater dashboards and BrandMeister API. Pi-Star availability measures dashboard reachability.</div>
 </main>
@@ -336,9 +336,8 @@ async function startViewers(){
     const response=await fetch('viewers_api.php',{method:'POST',cache:'no-store',signal:controller.signal,body:new URLSearchParams({session})});
     if(!response.ok)throw new Error('Viewer request failed');
     const v=await response.json();if(!v.ok)throw new Error('Viewer data unavailable');
-    el.innerHTML=`<p><b>${esc(v.active_sessions)}</b> active page sessions · <b>${esc(v.unique_ips)}</b> unique connections</p>
-     ${v.ipv6_sessions?`<p class="muted">${esc(v.ipv6_sessions)} session(s) connected over IPv6; IPv4 unavailable.</p>`:''}
-     <div class="table"><table><thead><tr><th>IPv4 address</th><th>Sessions</th><th>Last seen</th></tr></thead><tbody>${v.addresses.map(a=>`<tr><td>${esc(a.ip)}</td><td>${esc(a.sessions)}</td><td>${esc(new Date(a.last_seen).toLocaleTimeString('en-US',{timeZone:'America/New_York',timeZoneName:'short'}))}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No IPv4 viewers currently reported.</td></tr>'}</tbody></table></div>`;
+    el.innerHTML=`<p><b>${esc(v.active_sessions)}</b> active page sessions · <b>${esc(v.unique_ips)}</b> unique IP address${v.unique_ips===1?'':'es'}</p>
+     <div class="table"><table><thead><tr><th>IP address</th><th>Sessions</th><th>Last seen</th></tr></thead><tbody>${v.addresses.map(a=>`<tr><td>${esc(a.ip)}</td><td>${esc(a.sessions)}</td><td>${esc(new Date(a.last_seen).toLocaleTimeString('en-US',{timeZone:'America/New_York',timeZoneName:'short'}))}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No active viewers currently reported.</td></tr>'}</tbody></table></div>`;
    }catch(e){el.textContent='Viewer information temporarily unavailable.';}
    finally{clearTimeout(timer);setTimeout(poll,30000);}
   }

@@ -30,8 +30,8 @@ function viewer_heartbeat(string $path, string $session, string $ip, int $now): 
         $count = (int)$row['sessions'];
         $total += $count;
         $v4 = viewer_ipv4($row['ip']);
-        if ($v4 === null) { $ipv6 += $count; continue; }
-        $addresses[] = ['ip'=>$v4, 'sessions'=>$count, 'last_seen'=>gmdate('c', (int)$row['last_seen'])];
+        if ($v4 === null) $ipv6 += $count;
+        $addresses[] = ['ip'=>$v4 ?? $row['ip'], 'sessions'=>$count, 'last_seen'=>gmdate('c', (int)$row['last_seen'])];
     }
     return ['ok'=>true, 'active_sessions'=>$total, 'unique_ips'=>count($rows), 'ipv6_sessions'=>$ipv6, 'addresses'=>$addresses];
 }

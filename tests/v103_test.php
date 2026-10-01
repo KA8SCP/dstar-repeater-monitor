@@ -48,9 +48,9 @@ try {
     $v=viewer_heartbeat($db,$b,'::ffff:192.0.2.1',1020);
     expect($v['active_sessions']===2 && $v['unique_ips']===1,'Tabs counted separately; mapped addresses grouped');
     $v=viewer_heartbeat($db,$c,'2001:db8::1',1030);
-    expect($v['active_sessions']===3 && $v['ipv6_sessions']===1 && count($v['addresses'])===1,'Native IPv6 counted but not exposed in IPv4 list');
-    expect(!str_contains(json_encode($v),'2001:db8'),'No IPv6 address leaked in API');
+    expect($v['active_sessions']===3 && $v['ipv6_sessions']===1 && count($v['addresses'])===2,'IPv4 and IPv6 both listed');
+    expect($v['addresses'][1]['ip']==='2001:db8::1' && $v['addresses'][1]['sessions']===1,'Native IPv6 address and session count preserved');
     $v=viewer_heartbeat($db,$c,'2001:db8::1',1140);
-    expect($v['active_sessions']===1 && $v['addresses']===[],'Stale sessions expire at two minutes');
+    expect($v['active_sessions']===1 && count($v['addresses'])===1 && $v['addresses'][0]['ip']==='2001:db8::1','Stale sessions expire at two minutes');
 } finally { unlink($db); }
 echo "All v1.0.3 checks passed.\n";
