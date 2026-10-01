@@ -51,10 +51,10 @@ section{padding:0 12px 12px}h3{font-size:13px;margin:5px 0 8px;color:#cbd5e1;bor
 <div class="table"><table><thead><tr><th>Repeater</th><th>Callsign</th><th>User Message</th><th>Module / Mode</th><th>Target</th><th>Time (Eastern)</th></tr></thead><tbody id="lastheard"></tbody></table></div>
 </div>
 <div class="network panel" style="padding:14px"><h2>24-hour Availability History</h2><div id="history" class="historygrid"><span class="muted">Loading history…</span></div></div>
+<div class="grid" id="cards"></div>
 <div class="network panel" style="padding:14px"><h2>Page Viewers</h2>
 <p class="muted">Open pages active within the last two minutes. IPv4 addresses are shown where available.</p>
 <div id="viewers">Loading viewer information…</div></div>
-<div class="grid" id="cards"></div>
 <div class="footer">Auto-refresh every <?=REFRESH_SECONDS?> seconds · Public repeater dashboards and BrandMeister API. Pi-Star availability measures dashboard reachability.</div>
 </main>
 <script>
