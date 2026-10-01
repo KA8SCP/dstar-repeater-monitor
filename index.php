@@ -337,7 +337,7 @@ async function startViewers(){
     if(!response.ok)throw new Error('Viewer request failed');
     const v=await response.json();if(!v.ok)throw new Error('Viewer data unavailable');
     el.innerHTML=`<p><b>${esc(v.active_sessions)}</b> active page sessions · <b>${esc(v.unique_ips)}</b> unique IP address${v.unique_ips===1?'':'es'}</p>
-     <div class="table"><table><thead><tr><th>IP</th><th>Sessions</th><th>Last seen</th></tr></thead><tbody>${v.addresses.map(a=>`<tr><td>${esc(a.ip)}</td><td>${esc(a.sessions)}</td><td>${esc(new Date(a.last_seen).toLocaleTimeString('en-US',{timeZone:'America/New_York',timeZoneName:'short'}))}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No active viewers currently reported.</td></tr>'}</tbody></table></div>`;
+     <div class="table"><table><thead><tr><th>IP address</th><th>Sessions</th><th>Last seen</th></tr></thead><tbody>${v.addresses.map(a=>`<tr><td>${esc(a.ip)}</td><td>${esc(a.sessions)}</td><td>${esc(new Date(a.last_seen).toLocaleTimeString('en-US',{timeZone:'America/New_York',timeZoneName:'short'}))}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No active viewers currently reported.</td></tr>'}</tbody></table></div>`;
    }catch(e){el.textContent='Viewer information temporarily unavailable.';}
    finally{clearTimeout(timer);setTimeout(poll,30000);}
   }
