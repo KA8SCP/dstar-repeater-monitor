@@ -141,6 +141,16 @@ $REFLECTORS = [
         'urls' => ['https://wl7cwi.dstargateway.org/index.html'],
         'g2_urls' => ['https://wl7cwi.dstargateway.org/fs.html'],
     ],
+    'W4CRL' => [
+        'name' => 'W4CRL',
+        'type' => 'DPLUS_GATEWAY',
+        // Confirm source clock when the dashboard becomes reachable.
+        'timezone' => 'America/New_York',
+        'host' => 'w4crl.dstargateway.org',
+        'dashboard_url' => 'https://w4crl.dstargateway.org/',
+        'urls' => ['https://w4crl.dstargateway.org/'],
+        'g2_urls' => ['https://w4crl.dstargateway.org/fs.html'],
+    ],
     'W1ATD_MULTIMODE' => [
         'name' => 'W1ATD Multimode',
         'type' => 'PISTAR',
