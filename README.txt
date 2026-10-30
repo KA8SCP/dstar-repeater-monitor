@@ -22,7 +22,7 @@ Web-based monitoring for D-STAR DPLUS gateways, BrandMeister DMR, and Pi-Star mu
 
 ## Monitored repeaters
 
-The twelve cards appear in this order:
+The thirteen cards appear in this order:
 
 | Repeater | Type | Dashboard |
 |---|---|---|
@@ -37,6 +37,7 @@ The twelve cards appear in this order:
 | KD8QOF | D-STAR DPLUS | https://kd8qof.dstargateway.org/ |
 | VE3RXR | D-STAR DPLUS + g2_link | http://ve3rxr.dstargateway.org/ |
 | VE3TTT | D-STAR DPLUS + g2_link | http://ve3ttt.dstargateway.org/ |
+| WL7CWI | D-STAR DPLUS + g2_link | https://wl7cwi.dstargateway.org/ |
 | W1ATD Multimode | Pi-Star | http://stn4571.ip.irlp.net:41390/ |
 
 ## D-STAR gateways
@@ -145,3 +146,5 @@ On September 30, 2026, the v1.0.3 parser, timestamp, viewer expiry, IPv4 mapping
 ## Earlier release
 
 v1.0.1 introduced DPLUS Remote Users and preserved WB1GOF's separate DPLUS and g2_link information. Those features remain in v1.0.3.
+
+WL7CWI was added October 30, 2026. Its DPLUS index.html and g2_link fs.html pages are retrieved separately over HTTPS. Source times use America/Anchorage and display in Eastern time. W1ATD remains the final card.

@@ -132,6 +132,15 @@ $REFLECTORS = [
         'urls' => ['http://ve3ttt.dstargateway.org/status.html'],
         'g2_urls' => ['http://ve3ttt.dstargateway.org/fs.html'],
     ],
+    'WL7CWI' => [
+        'name' => 'WL7CWI',
+        'type' => 'DPLUS_GATEWAY',
+        'timezone' => 'America/Anchorage',
+        'host' => 'wl7cwi.dstargateway.org',
+        'dashboard_url' => 'https://wl7cwi.dstargateway.org/',
+        'urls' => ['https://wl7cwi.dstargateway.org/index.html'],
+        'g2_urls' => ['https://wl7cwi.dstargateway.org/fs.html'],
+    ],
     'W1ATD_MULTIMODE' => [
         'name' => 'W1ATD Multimode',
         'type' => 'PISTAR',

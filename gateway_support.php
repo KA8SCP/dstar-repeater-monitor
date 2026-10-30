@@ -27,7 +27,7 @@ function activity_datetime(string $value, ?string $sourceTimezone): ?DateTimeImm
     $format = null;
     if (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/D', $value)) {
         $format = '!Y-m-d\TH:i:sP';
-    } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} (?:UTC|GMT|EDT|EST|CDT|CST|MDT|MST|PDT|PST)$/D', $value)) {
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} (?:UTC|GMT|EDT|EST|CDT|CST|MDT|MST|PDT|PST|AKDT|AKST)$/D', $value)) {
         $format = '!Y-m-d H:i:s T';
     } elseif ($sourceTimezone !== null) {
         if (preg_match('/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/D', $value)) $format = '!Y/m/d H:i:s';
